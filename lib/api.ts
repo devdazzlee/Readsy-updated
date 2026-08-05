@@ -58,3 +58,24 @@ export async function buildBookBlueprint(input: {
   }
   return data.blueprint;
 }
+
+export async function submitQuote(input: {
+  name: string;
+  email: string;
+  phone: string;
+  project?: string;
+  smsConsent?: string;
+  source?: string;
+}) {
+  const res = await fetch(`${API_URL}/api/quote`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  const data = (await res.json()) as { ok?: boolean; error?: string };
+  if (!res.ok) {
+    throw new Error(data.error || "Quote request failed");
+  }
+  return data;
+}

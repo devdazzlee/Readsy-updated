@@ -106,7 +106,7 @@ export function QuoteModal() {
                 for writing, editing, design, publishing, or marketing.
               </p>
               <div className="mt-5">
-                <QuoteFormFields idPrefix="modal" />
+                <QuoteFormFields idPrefix="modal" source="quote-modal" />
               </div>
             </div>
           </motion.div>

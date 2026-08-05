@@ -2,26 +2,53 @@
 
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { submitQuote } from "@/lib/api";
 
 type QuoteFormFieldsProps = {
   idPrefix?: string;
   compact?: boolean;
   onSuccess?: () => void;
+  source?: string;
 };
 
 export function QuoteFormFields({
   idPrefix = "quote",
   compact = false,
   onSuccess,
+  source = "quote-form",
 }: QuoteFormFieldsProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    console.log("Quote request:", Object.fromEntries(data.entries()));
-    setSubmitted(true);
-    onSuccess?.();
+    setError("");
+    setLoading(true);
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      await submitQuote({
+        name: String(data.get("name") || ""),
+        email: String(data.get("email") || ""),
+        phone: String(data.get("phone") || ""),
+        project: String(data.get("project") || ""),
+        source,
+      });
+      setSubmitted(true);
+      onSuccess?.();
+      form.reset();
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not send your request. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -39,7 +66,12 @@ export function QuoteFormFields({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <div className={compact ? "grid gap-3 sm:grid-cols-3" : "flex flex-col gap-3"}>
+      <fieldset disabled={loading} className="contents">
+      <div
+        className={
+          compact ? "grid gap-3 sm:grid-cols-3" : "flex flex-col gap-3"
+        }
+      >
         <Field
           id={`${idPrefix}-name`}
           name="name"
@@ -82,9 +114,20 @@ export function QuoteFormFields({
           />
         </div>
       )}
-      <Button type="submit" className="mt-1 w-full">
+      {error ? (
+        <p className="text-sm text-red-600" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <Button
+        type="submit"
+        className="mt-1 w-full"
+        loading={loading}
+        loadingText="Sending..."
+      >
         {compact ? "Request a Free Quote" : "Get a Free Quote"}
       </Button>
+      </fieldset>
     </form>
   );
 }

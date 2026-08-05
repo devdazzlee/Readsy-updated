@@ -34,7 +34,7 @@ export function QuoteForm() {
               </p>
             </div>
             <div className="mx-auto mt-8 max-w-3xl">
-              <QuoteFormFields idPrefix="footer" compact />
+              <QuoteFormFields idPrefix="footer" compact source="footer-quote" />
             </div>
           </div>
         </MotionItem>

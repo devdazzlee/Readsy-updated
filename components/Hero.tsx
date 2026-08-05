@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { submitQuote } from "@/lib/api";
 import { fadeUp, stagger } from "@/lib/motion";
 import { useChat } from "./ChatProvider";
 
@@ -95,12 +96,38 @@ export function Hero() {
 function HeroLeadForm() {
   const [submitted, setSubmitted] = useState(false);
   const [smsOk, setSmsOk] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    console.log("Hero quote:", Object.fromEntries(data.entries()));
-    setSubmitted(true);
+    setError("");
+    setLoading(true);
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      await submitQuote({
+        name: String(data.get("name") || ""),
+        email: String(data.get("email") || ""),
+        phone: String(data.get("phone") || ""),
+        project: String(data.get("project") || ""),
+        smsConsent: smsOk ? "yes" : "no",
+        source: "hero",
+      });
+      setSubmitted(true);
+      form.reset();
+      setSmsOk(false);
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Could not send your request. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -118,6 +145,7 @@ function HeroLeadForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <fieldset disabled={loading} className="contents">
       <input
         name="name"
         required
@@ -158,9 +186,20 @@ function HeroLeadForm() {
           data rates may apply. Reply STOP to unsubscribe.
         </span>
       </label>
-      <Button type="submit" className="mt-1 h-12 w-full uppercase tracking-wide">
+      {error ? (
+        <p className="text-sm text-red-600" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <Button
+        type="submit"
+        className="mt-1 h-12 w-full uppercase tracking-wide"
+        loading={loading}
+        loadingText="Sending..."
+      >
         Contact With Us
       </Button>
+      </fieldset>
     </form>
   );
 }

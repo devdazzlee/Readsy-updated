@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
-  Loader2,
   Map,
   Target,
   Users,
@@ -238,19 +237,12 @@ export function BookBlueprint() {
               <Button
                 type="submit"
                 className="mt-5 w-full"
-                disabled={loading || !idea.trim()}
+                disabled={!idea.trim()}
+                loading={loading}
+                loadingText="Building your blueprint..."
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Building your blueprint...
-                  </>
-                ) : (
-                  <>
-                    Build My Book Blueprint
-                    <ArrowRight className="h-4 w-4" />
-                  </>
-                )}
+                Build My Book Blueprint
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
           </MotionItem>

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, MessageCircle, Minus, X } from "lucide-react";
+import { ArrowUp, Loader2, MessageCircle, Minus, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { sendChatMessage } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -226,17 +226,27 @@ export function ChatWidget() {
                 <input
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask about publishing, editing, covers..."
+                  placeholder={
+                    loading
+                      ? "Sending your message..."
+                      : "Ask about publishing, editing, covers..."
+                  }
                   maxLength={700}
-                  className="h-10 flex-1 bg-transparent px-2.5 text-sm text-navy outline-none placeholder:text-text-muted/70"
+                  disabled={loading}
+                  className="h-10 flex-1 bg-transparent px-2.5 text-sm text-navy outline-none placeholder:text-text-muted/70 disabled:cursor-not-allowed disabled:opacity-70"
                 />
                 <button
                   type="submit"
                   disabled={loading || !input.trim()}
                   className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-white transition hover:bg-navy-deep disabled:opacity-40"
-                  aria-label="Send"
+                  aria-label={loading ? "Sending message" : "Send"}
+                  aria-busy={loading || undefined}
                 >
-                  <ArrowUp className="h-4 w-4" strokeWidth={2.25} />
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" strokeWidth={2.25} />
+                  ) : (
+                    <ArrowUp className="h-4 w-4" strokeWidth={2.25} />
+                  )}
                 </button>
               </div>
               <p className="mt-2 px-1 text-[10px] tracking-wide text-text-muted/80">

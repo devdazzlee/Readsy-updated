@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, Loader2, Wand2 } from "lucide-react";
+import { ArrowRight, Wand2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { analyzeBookIdea } from "@/lib/api";
 import { Button } from "@/components/ui/button";
@@ -114,19 +114,12 @@ export function AiConcierge() {
               <Button
                 type="submit"
                 className="mt-5 w-full"
-                disabled={loading || !idea.trim()}
+                disabled={!idea.trim()}
+                loading={loading}
+                loadingText="Analyzing idea..."
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Analyzing idea...
-                  </>
-                ) : (
-                  <>
-                    Analyze My Idea
-                    <ArrowRight className="h-4 w-4" />
-                  </>
-                )}
+                Analyze My Idea
+                <ArrowRight className="h-4 w-4" />
               </Button>
             </form>
           </MotionItem>
