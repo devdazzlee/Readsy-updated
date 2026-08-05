@@ -61,7 +61,7 @@ export function QuoteModal() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 grid w-full max-w-[920px] overflow-hidden rounded-3xl bg-white shadow-[0_40px_120px_-40px_rgba(20,29,41,0.75)] outline-none md:grid-cols-2 md:items-stretch"
+            className="relative z-10 grid w-full max-w-[960px] overflow-hidden rounded-3xl bg-white shadow-[0_40px_120px_-40px_rgba(20,29,41,0.75)] outline-none md:grid-cols-[1.05fr_0.95fr] md:items-stretch"
           >
             <button
               type="button"
@@ -72,16 +72,18 @@ export function QuoteModal() {
               <X className="h-4 w-4" strokeWidth={1.75} />
             </button>
 
-            {/* Show original promo image as-is — no crop/zoom */}
-            <div className="relative hidden min-h-[34rem] border-r border-navy/10 bg-white md:block">
-              <Image
-                src="/images/modal-image/Modal-image.png"
-                alt="Readsy 50 percent off publishing offer"
-                fill
-                className="object-contain object-center"
-                sizes="(max-width: 920px) 100vw, 460px"
-                priority
-              />
+            {/* Original promo art — panel bg white; image file unchanged */}
+            <div className="relative hidden min-h-[34rem] border-r border-navy/15 !bg-white md:block">
+              <div className="absolute inset-3">
+                <Image
+                  src="/images/modal-image/Modal-image.png"
+                  alt="Readsy 50 percent off publishing offer"
+                  fill
+                  className="object-contain object-center"
+                  sizes="(max-width: 960px) 100vw, 500px"
+                  priority
+                />
+              </div>
             </div>
 
             <div className="relative flex flex-col justify-center px-5 py-7 sm:px-8 sm:py-9">

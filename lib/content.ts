@@ -149,7 +149,7 @@ export const BOOK_COVERS = [
   {
     slug: "the-lamb",
     title: "The Lamb",
-    front: "/images/book-covers-front/the-lamb.jpg",
+    front: "/images/book-covers-front/the-lamb1.jpg",
     back: "/images/book-covers-back/the-lamb.jpg",
   },
 ] as const;
