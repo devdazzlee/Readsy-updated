@@ -1,26 +1,152 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navy: rgb(20, 29, 41);
+  --navy-deep: rgb(14, 20, 28);
+  --sky: #1da9e0;
+  --sky-bright: #2bb8f0;
+  --sky-soft: #e8f6fc;
+  --surface: #ffffff;
+  --muted: #f3f7fb;
+  --muted-border: #d5e2ee;
+  --text: rgb(20, 29, 41);
+  --text-muted: #5a6b7d;
+  --background: var(--surface);
+  --foreground: var(--text);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-sky: var(--sky);
+  --color-sky-bright: var(--sky-bright);
+  --color-sky-soft: var(--sky-soft);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-muted-border: var(--muted-border);
+  --color-text-muted: var(--text-muted);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-fraunces);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--sky) 35%, white);
+  color: var(--navy);
+}
+
+.book-perspective {
+  perspective: 1200px;
+}
+
+.book-flip {
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.book-flip.is-flipped {
+  transform: rotateY(180deg);
+}
+
+/* Hover flip only on real pointer devices — avoids sticky touch hover */
+@media (hover: hover) and (pointer: fine) {
+  .group:hover .book-flip,
+  .group:focus-within .book-flip {
+    transform: rotateY(180deg);
+  }
+}
+
+.book-face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.book-face-back {
+  transform: rotateY(180deg);
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-modal-in {
+  animation: modal-in 0.28s ease-out both;
+}
+
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+}
+
+.ai-protected {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.ai-protected * {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Slim dark scrollbar for AI result panels */
+.ai-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(43, 184, 240, 0.45) transparent;
+}
+
+.ai-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-scroll::-webkit-scrollbar-track {
+  margin: 6px 0;
+  background: transparent;
+}
+
+.ai-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(43, 184, 240, 0.35);
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+.ai-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(43, 184, 240, 0.6);
+}
+
+.ai-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
 }
