@@ -13,14 +13,14 @@ export function Footer() {
       <div className="relative mx-auto grid w-full max-w-[1400px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.35fr_1fr_1fr_1.15fr] lg:gap-12 lg:px-10 lg:py-16">
         <div>
           <Image
-            src="/images/footer-logo.svg"
-            alt="The Readsy"
-            width={190}
-            height={74}
-            className="h-12 w-auto sm:h-[3.25rem]"
+            src="/logo-new.webp"
+            alt="The Readsy Publishers"
+            width={1106}
+            height={456}
+            className="h-14 w-auto brightness-0 invert sm:h-16"
           />
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/65">
-            The Readsy is a full publishing studio for aspiring authors.
+            The Readsy Publishers is a full publishing studio for aspiring authors.
             Ghostwriting, editing, cover design, publishing, and marketing in
             one place.
           </p>
@@ -49,9 +49,9 @@ export function Footer() {
           <ul className="mt-4 space-y-2.5 text-sm text-white/65">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a href={link.href} className="transition hover:text-sky-bright">
+                <Link href={link.href} className="transition hover:text-sky-bright">
                   {link.label}
-                </a>
+                </Link>
               </li>
             ))}
             <li>
@@ -70,7 +70,7 @@ export function Footer() {
             {SERVICES.map((service) => (
               <li key={service.id}>
                 <a
-                  href={`#${service.id}`}
+                  href={`/#${service.id}`}
                   className="transition hover:text-sky-bright"
                 >
                   {service.title}
@@ -98,13 +98,13 @@ export function Footer() {
             </li>
             <li>
               <a
-                href="mailto:hello@readsy.com"
+                href="mailto:contact@thereadsypublishers.com"
                 className="inline-flex items-center gap-2.5 transition hover:text-sky-bright"
               >
                 <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-sky/15 text-sky-bright">
                   <Mail className="h-3.5 w-3.5" strokeWidth={1.75} />
                 </span>
-                hello@readsy.com
+                contact@thereadsypublishers.com
               </a>
             </li>
             <li className="inline-flex items-start gap-2.5">
@@ -120,9 +120,19 @@ export function Footer() {
       </div>
 
       <div className="relative border-t border-white/10">
-        <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-white/45 sm:flex-row sm:px-6 lg:px-10">
-          <p>© {new Date().getFullYear()} The Readsy. All rights reserved.</p>
-          <p>Ghostwriting · Editing · Publishing · Design · Marketing</p>
+        <div className="mx-auto flex w-full max-w-[1400px] flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-white/45 sm:flex-row sm:px-6 lg:px-10">
+          <p>© {new Date().getFullYear()} The Readsy Publishers. All rights reserved.</p>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5">
+            <Link href="/privacy" className="transition hover:text-sky-bright">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="transition hover:text-sky-bright">
+              Terms &amp; Conditions
+            </Link>
+            <span className="hidden sm:inline">
+              Ghostwriting · Editing · Publishing · Design · Marketing
+            </span>
+          </div>
         </div>
       </div>
     </footer>

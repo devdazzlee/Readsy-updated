@@ -28,7 +28,7 @@ router.post("/", ideaLimiter, async (req, res) => {
     if (isBlockedPrompt(idea)) {
       return res.json({
         analysis:
-          "I can only analyze book ideas for The Readsy. Please describe your manuscript concept, genre, and goal.",
+          "I can only analyze book ideas for The Readsy Publishers. Please describe your manuscript concept, genre, and goal.",
       });
     }
 

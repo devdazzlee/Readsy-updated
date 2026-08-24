@@ -20,7 +20,7 @@ export function Portfolio() {
           </h2>
           <p className="mt-3 text-base text-text-muted">
             Hover any cover to reveal the back. Real titles from authors who
-            trusted Readsy with their story.
+            trusted The Readsy Publishers with their story.
           </p>
         </MotionItem>
 

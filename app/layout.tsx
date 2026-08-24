@@ -17,7 +17,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Readsy | Ghostwriting, Publishing & Book Marketing",
+  title: "The Readsy Publishers | Ghostwriting, Publishing & Book Marketing",
   description:
     "Turn your story into a published masterpiece. Professional ghostwriting, editing, publishing, cover design, and book marketing.",
 };

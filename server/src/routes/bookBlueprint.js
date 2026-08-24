@@ -13,7 +13,7 @@ const blueprintLimiter = rateLimit({
   message: { error: "Rate limit reached. Please wait a minute." },
 });
 
-const BLUEPRINT_SYSTEM = `You are Readsy's AI Book Blueprint engine. Authors get stuck between idea and structure. Your job is to turn a short book brief into a clear, usable blueprint that makes them feel ready to hire a professional team.
+const BLUEPRINT_SYSTEM = `You are The Readsy Publishers' AI Book Blueprint engine. Authors get stuck between idea and structure. Your job is to turn a short book brief into a clear, usable blueprint that makes them feel ready to hire a professional team.
 
 Return markdown in EXACTLY this structure:
 
@@ -34,7 +34,7 @@ Numbered list of 8 to 10 chapters. Each line: **Chapter title** - one-sentence p
 ## Opening Hook
 2-3 sentences suggesting how chapter one should start (no full prose chapter).
 
-## Publish Path with Readsy
+## Publish Path with The Readsy Publishers
 Bullet list recommending 2-4 services only from: Ghost Writing, Book Editing, Book Publishing, Book Cover Design, Book Marketing. Briefly say why each fits.
 
 Rules:
@@ -59,7 +59,7 @@ router.post("/", blueprintLimiter, async (req, res) => {
     if (isBlockedPrompt(idea)) {
       return res.json({
         blueprint:
-          "I can only build book blueprints for The Readsy. Please describe your book concept, genre, and publishing goal.",
+          "I can only build book blueprints for The Readsy Publishers. Please describe your book concept, genre, and publishing goal.",
       });
     }
 

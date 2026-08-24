@@ -14,7 +14,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 const STARTER: Msg = {
   role: "assistant",
   content:
-    "Welcome to Readsy. I can help with ghostwriting, editing, publishing, cover design, and book marketing. What are you working on?",
+    "Welcome to The Readsy Publishers. I can help with ghostwriting, editing, publishing, cover design, and book marketing. What are you working on?",
 };
 
 const SUGGESTIONS = [
@@ -92,7 +92,7 @@ export function ChatWidget() {
                     </p>
                     <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-white/65">
                       <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                      Online · Readsy services only
+                      Online · The Readsy Publishers services only
                     </p>
                   </div>
                 </div>
@@ -250,7 +250,7 @@ export function ChatWidget() {
                 </button>
               </div>
               <p className="mt-2 px-1 text-[10px] tracking-wide text-text-muted/80">
-                Responses limited to Readsy book services
+                Responses limited to The Readsy Publishers book services
               </p>
             </form>
           </motion.div>

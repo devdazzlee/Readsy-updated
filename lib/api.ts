@@ -59,6 +59,30 @@ export async function buildBookBlueprint(input: {
   return data.blueprint;
 }
 
+export async function generateBookCovers(input: {
+  title: string;
+  subtitle?: string;
+  author?: string;
+  genre: string;
+  style: string;
+  description?: string;
+}) {
+  const res = await fetch(`${API_URL}/api/book-cover`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+
+  const data = (await res.json()) as { images?: string[]; error?: string };
+  if (!res.ok) {
+    throw new Error(data.error || "Cover generation failed");
+  }
+  if (!data.images || data.images.length === 0) {
+    throw new Error("No covers were generated");
+  }
+  return data.images;
+}
+
 export async function submitQuote(input: {
   name: string;
   email: string;

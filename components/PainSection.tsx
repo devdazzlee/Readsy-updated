@@ -30,7 +30,7 @@ export function PainSection() {
                 Stuck between idea and finished book?
               </p>
               <p className="mt-1 text-sm text-white/75">
-                Most authors are. Readsy closes that gap.
+                Most authors are. The Readsy Publishers closes that gap.
               </p>
             </div>
           </div>

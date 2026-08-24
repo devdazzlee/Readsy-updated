@@ -7,18 +7,19 @@ import { X } from "lucide-react";
 import { QuoteFormFields } from "./QuoteFormFields";
 import { useQuote } from "./QuoteProvider";
 
-export function QuoteModal() {
+export function QuoteModal({ autoOpen = true }: { autoOpen?: boolean }) {
   const { isOpen, openQuote, closeQuote } = useQuote();
   const dialogRef = useRef<HTMLDivElement>(null);
 
   // Auto-open on every visit. Do NOT gate with a ref that survives
   // Strict Mode cleanup — that cancels the timer and blocks reopen.
   useEffect(() => {
+    if (!autoOpen) return;
     const timer = window.setTimeout(() => {
       openQuote();
     }, 1100);
     return () => window.clearTimeout(timer);
-  }, [openQuote]);
+  }, [autoOpen, openQuote]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -77,7 +78,7 @@ export function QuoteModal() {
               <div className="absolute inset-3">
                 <Image
                   src="/images/modal-image/Modal-image.png"
-                  alt="Readsy 50 percent off publishing offer"
+                  alt="The Readsy Publishers 50 percent off publishing offer"
                   fill
                   className="object-contain object-center"
                   sizes="(max-width: 960px) 100vw, 500px"
@@ -88,11 +89,11 @@ export function QuoteModal() {
 
             <div className="relative flex flex-col justify-center px-5 py-7 sm:px-8 sm:py-9">
               <Image
-                src="/images/logo.svg"
-                alt="The Readsy"
-                width={140}
-                height={55}
-                className="mb-4 h-9 w-auto md:hidden"
+                src="/logo-new.webp"
+                alt="The Readsy Publishers"
+                width={1106}
+                height={456}
+                className="mb-4 h-9 w-auto self-start md:hidden"
               />
               <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky">
                 Free consultation

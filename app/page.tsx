@@ -37,7 +37,10 @@ export default function Home() {
         <AiConcierge />
         <ProcessSection />
         <WhyChooseUs />
-        <StudioCta />
+        <StudioCta
+          image="/images/sections/home-cta.jpg"
+          imageAlt="A proud author holding their newly published book"
+        />
         <Testimonials />
         <QuoteForm />
       </main>

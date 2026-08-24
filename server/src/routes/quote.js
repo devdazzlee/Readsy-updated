@@ -51,7 +51,7 @@ router.post("/", quoteLimiter, async (req, res) => {
   } catch (error) {
     console.error("Quote email error:", error.message);
     return res.status(500).json({
-      error: "Could not send your request. Please try again or email contact@thereadsy.com.",
+      error: "Could not send your request. Please try again or email contact@thereadsypublishers.com.",
     });
   }
 });

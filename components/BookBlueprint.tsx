@@ -104,15 +104,16 @@ export function BookBlueprint() {
         <MotionItem className="mx-auto max-w-3xl text-center">
           <p className="inline-flex items-center gap-2 rounded-full border border-sky/25 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-sky">
             <Map className="h-3.5 w-3.5" />
-            Readsy exclusive
+            The Readsy Publishers exclusive
           </p>
           <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-navy sm:text-4xl lg:text-[2.85rem]">
             AI Book Blueprint
           </h2>
           <p className="mt-3 text-base text-text-muted sm:text-lg">
             Most authors stall between idea and first chapter. Get a free
-            chapter map, reader profile, title options, and a clear Readsy
-            publish path, then turn it into a finished book with our team.
+            chapter map, reader profile, title options, and a clear path to
+            publishing with The Readsy Publishers, then turn it into a
+            finished book with our team.
           </p>
         </MotionItem>
 
@@ -280,15 +281,15 @@ export function BookBlueprint() {
                     </p>
                     <p className="mt-3 text-sm leading-relaxed text-white/70">
                       This is the step most authors skip, then stall for months.
-                      Build the blueprint free, then let Readsy write, edit,
-                      design, and launch it.
+                      Build the blueprint free, then let The Readsy Publishers
+                      write, edit, design, and launch it.
                     </p>
                     <div className="mt-8 space-y-2">
                       {[
                         "Working Titles",
                         "Ideal Reader",
                         "Chapter Blueprint",
-                        "Publish Path with Readsy",
+                        "Publish Path with The Readsy Publishers",
                       ].map((label, i) => (
                         <div
                           key={label}
@@ -355,8 +356,8 @@ export function BookBlueprint() {
                       </ReactMarkdown>
                     </ProtectedAiContent>
                     <p className="mt-3 text-[11px] text-white/50">
-                      AI output is protected. Work with Readsy to turn this into
-                      a finished book.
+                      AI output is protected. Work with The Readsy Publishers
+                      to turn this into a finished book.
                     </p>
                     <div className="mt-4 grid gap-2 sm:grid-cols-2">
                       <Button className="w-full" onClick={openQuote}>

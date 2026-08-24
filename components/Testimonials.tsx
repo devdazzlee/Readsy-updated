@@ -1,6 +1,7 @@
 "use client";
 
 import { Quote } from "lucide-react";
+import Image from "next/image";
 import { TESTIMONIALS } from "@/lib/content";
 import { MotionItem, MotionSection } from "@/lib/motion";
 
@@ -16,7 +17,7 @@ export function Testimonials() {
             Social proof
           </p>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-navy sm:text-4xl">
-            Authors who trusted Readsy
+            Authors who trusted The Readsy Publishers
           </h2>
           <p className="mt-3 text-base text-text-muted">
             Real feedback from writers who went from idea to published book with
@@ -47,11 +48,14 @@ export function Testimonials() {
                   &ldquo;{item.quote}&rdquo;
                 </blockquote>
                 <figcaption className="mt-6 flex items-center gap-3 border-t border-muted-border pt-5">
-                  <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-navy to-sky font-display text-sm font-bold text-white">
-                    {item.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
+                  <span className="relative inline-flex h-11 w-11 shrink-0 overflow-hidden rounded-full ring-2 ring-sky/20">
+                    <Image
+                      src={item.avatar}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                      sizes="44px"
+                    />
                   </span>
                   <span>
                     <span className="block text-sm font-semibold text-navy">

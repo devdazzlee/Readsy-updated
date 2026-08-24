@@ -61,8 +61,9 @@ export function AiConcierge() {
             AI Book Concierge
           </h2>
           <p className="mt-3 text-base text-text-muted sm:text-lg">
-            Paste your idea. Get strengths, gaps, and the exact Readsy services
-            that fit. A free first step before your consultation.
+            Paste your idea. Get strengths, gaps, and the exact services from
+            The Readsy Publishers that fit. A free first step before your
+            consultation.
           </p>
         </MotionItem>
 
@@ -149,8 +150,8 @@ export function AiConcierge() {
                     </p>
                     <p className="mt-3 text-sm leading-relaxed text-white/70">
                       We highlight concept strength, gaps to fix, and which
-                      Readsy services will move you from idea to published
-                      author fastest.
+                      services from The Readsy Publishers will move you from
+                      idea to published author fastest.
                     </p>
                     <div className="mt-8 grid grid-cols-2 gap-3">
                       {["Concept Snapshot", "Service Match", "Gap Analysis", "Next Step"].map(

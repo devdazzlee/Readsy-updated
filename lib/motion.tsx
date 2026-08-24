@@ -57,13 +57,15 @@ export function MotionItem({
   children,
   className,
   variants = fadeUp,
+  id,
 }: {
   children: ReactNode;
   className?: string;
   variants?: Variants;
+  id?: string;
 }) {
   return (
-    <motion.div className={cn(className)} variants={variants}>
+    <motion.div id={id} className={cn(className)} variants={variants}>
       {children}
     </motion.div>
   );

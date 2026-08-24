@@ -43,9 +43,9 @@ export function Hero() {
             variants={fadeUp}
             className="mt-5 max-w-lg text-base leading-relaxed text-text-muted sm:text-lg"
           >
-            From first draft to published author, Readsy handles ghostwriting,
-            editing, cover design, publishing, and marketing with one dedicated
-            studio team.
+            From first draft to published author, The Readsy Publishers
+            handles ghostwriting, editing, cover design, publishing, and
+            marketing with one dedicated studio team.
           </motion.p>
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">

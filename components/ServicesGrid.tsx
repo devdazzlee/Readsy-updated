@@ -36,7 +36,7 @@ export function ServicesGrid() {
       <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
         <MotionItem className="mx-auto max-w-2xl text-center">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky">
-            The Readsy Author Services
+            The Readsy Publishers Author Services
           </p>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-navy sm:text-4xl">
             Our Comprehensive Services Include

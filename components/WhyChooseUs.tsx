@@ -13,10 +13,10 @@ export function WhyChooseUs() {
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-2 lg:gap-16">
         <MotionItem>
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky">
-            Why Readsy
+            Why The Readsy Publishers
           </p>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight text-navy sm:text-4xl">
-            Why authors choose Readsy
+            Why authors choose The Readsy Publishers
           </h2>
           <p className="mt-3 max-w-md text-base text-text-muted">
             A partner that stays with your manuscript from the first outline to

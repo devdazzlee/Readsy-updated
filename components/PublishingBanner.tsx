@@ -61,8 +61,8 @@ export function PublishingBanner() {
             className="mt-4 max-w-md text-sm leading-relaxed text-navy/75 sm:text-base"
           >
             Whether you are writing your first chapter or ready to launch,
-            Readsy handles the craft, polish, and publishing path so your story
-            reaches real readers.
+            The Readsy Publishers handles the craft, polish, and publishing
+            path so your story reaches real readers.
           </motion.p>
 
           <motion.ul

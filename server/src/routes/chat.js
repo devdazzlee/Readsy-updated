@@ -45,7 +45,7 @@ router.post("/", chatLimiter, async (req, res) => {
       if (msg.role === "user" && isBlockedPrompt(content)) {
         return res.json({
           reply:
-            "I can only help with Readsy publishing services: ghostwriting, editing, publishing, cover design, and book marketing. How can I help with your book project?",
+            "I can only help with The Readsy Publishers services: ghostwriting, editing, publishing, cover design, and book marketing. How can I help with your book project?",
         });
       }
 

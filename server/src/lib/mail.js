@@ -29,13 +29,13 @@ export async function sendQuoteEmail({
   smsConsent,
   source,
 }) {
-  const to = process.env.EMAIL_TO || "contact@thereadsy.com";
+  const to = process.env.EMAIL_TO || "contact@thereadsypublishers.com";
   const fromUser = required("EMAIL_USER");
   const transporter = createMailer();
 
   const subject = `New quote request from ${name}`;
   const text = [
-    "New Readsy quote request",
+    "New quote request — The Readsy Publishers",
     "",
     `Name: ${name}`,
     `Email: ${email}`,
@@ -49,7 +49,7 @@ export async function sendQuoteEmail({
 
   const html = `
     <div style="font-family:Arial,sans-serif;line-height:1.5;color:#141d29">
-      <h2 style="margin:0 0 12px">New Readsy quote request</h2>
+      <h2 style="margin:0 0 12px">New quote request — The Readsy Publishers</h2>
       <p><strong>Name:</strong> ${escapeHtml(name)}</p>
       <p><strong>Email:</strong> ${escapeHtml(email)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(phone)}</p>
@@ -61,7 +61,7 @@ export async function sendQuoteEmail({
   `;
 
   await transporter.sendMail({
-    from: `"The Readsy Website" <${fromUser}>`,
+    from: `"The Readsy Publishers Website" <${fromUser}>`,
     to,
     replyTo: email,
     subject,
