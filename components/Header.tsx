@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "./Link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   ChevronDown,
@@ -35,7 +35,6 @@ export function Header() {
   const { openChat } = useChat();
   const { user, loading, logout } = useAuth();
   const pathname = usePathname();
-  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
@@ -43,19 +42,18 @@ export function Header() {
   const [loggingOut, setLoggingOut] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
 
-  // Clearing the token alone doesn't guarantee every consumer on the page
-  // re-renders instantly (RTK Query cache resets, header/dashboard state,
-  // etc. all update reactively but not always visibly in the same tick) —
-  // and if you log out from a protected page like /dashboard or /profile,
-  // staying put just leaves you looking at a stale, now-unauthorized page.
-  // Explicitly navigating to the homepage after logout sidesteps all of
-  // that: the page you're on unmounts, a fresh Header mounts already
-  // reading the cleared auth state, so there's nothing stale left to see —
-  // no manual refresh needed.
+  // A full page reload, not a client-side router.push. Logout is a security
+  // boundary — the only way to *guarantee* no stale state survives it
+  // (Redux, RTK Query's cache, React's own component state, Next's client
+  // router cache) is to not carry any JS runtime across the transition at
+  // all. A soft SPA navigation keeps all of that alive and relies on every
+  // subscriber correctly reacting to the cleared token in time, which is a
+  // much harder guarantee — this sidesteps that entire class of bug by
+  // construction rather than chasing each timing edge case individually.
   function handleLogout() {
     setLoggingOut(true);
     logout();
-    router.push("/");
+    window.location.href = "/";
   }
 
   useEffect(() => {

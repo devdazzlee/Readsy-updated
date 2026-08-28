@@ -102,8 +102,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   function logout() {
+    // Callers follow this with a full page reload (window.location.href),
+    // not a client-side navigation — that's what actually guarantees no
+    // stale UI survives logout, not anything done here. This just needs to
+    // clear the token from localStorage before that reload fires, which
+    // dispatch() already does synchronously.
     dispatch(clearToken());
-    dispatch(api.util.resetApiState());
   }
 
   function setUser(nextUser: AuthUser) {
