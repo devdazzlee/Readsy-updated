@@ -153,6 +153,7 @@ export function AuthModal({
               <div className="mt-5">
                 <GoogleSignInButton
                   text={mode === "signup" ? "signup_with" : "signin_with"}
+                  intent={mode}
                   onSuccess={onAuthenticated}
                   onError={(message) => setError(message)}
                 />

@@ -29,7 +29,7 @@ type AuthContextValue = {
     phone?: string;
     password: string;
   }) => Promise<void>;
-  loginWithGoogle: (credential: string) => Promise<void>;
+  loginWithGoogle: (credential: string, intent?: "login" | "signup") => Promise<void>;
   logout: () => void;
   setUser: (user: AuthUser) => void;
 };
@@ -92,9 +92,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function loginWithGoogle(credential: string) {
+  async function loginWithGoogle(credential: string, intent?: "login" | "signup") {
     try {
-      const result = await googleLoginMutation({ credential }).unwrap();
+      const result = await googleLoginMutation({ credential, intent }).unwrap();
       dispatch(setToken(result.token));
     } catch (err) {
       throw readableError(err, "Could not sign you in with Google.");

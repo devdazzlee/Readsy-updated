@@ -407,10 +407,14 @@ export function Header() {
                         setMenuOpen(false);
                         handleLogout();
                       }}
-                      className="flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-navy hover:bg-sky-soft disabled:opacity-60"
+                      className="flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50/60 px-3 py-2.5 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-60"
                     >
+                      {loggingOut ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <LogOut className="h-4 w-4" />
+                      )}
                       {loggingOut ? "Logging out..." : `Log out (${user.name.split(" ")[0]})`}
-                      {loggingOut ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                     </button>
                   </>
                 ) : (

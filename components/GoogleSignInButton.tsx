@@ -44,10 +44,15 @@ export function GoogleSignInButton({
   onSuccess,
   onError,
   text = "continue_with",
+  intent,
 }: {
   onSuccess: () => void;
   onError?: (message: string) => void;
   text?: GoogleButtonOptions["text"];
+  /** "login" requires an existing account and errors if none is found,
+   *  matching the email/password flow — it never silently creates one.
+   *  "signup" (default) creates an account on first sign-in. */
+  intent?: "login" | "signup";
 }) {
   const { loginWithGoogle } = useAuth();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -66,7 +71,7 @@ export function GoogleSignInButton({
         client_id: clientId as string,
         callback: async (response) => {
           try {
-            await loginWithGoogle(response.credential);
+            await loginWithGoogle(response.credential, intent);
             onSuccess();
           } catch (err) {
             onError?.(
@@ -109,7 +114,7 @@ export function GoogleSignInButton({
       if (pollTimeout) clearTimeout(pollTimeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clientId, text]);
+  }, [clientId, text, intent]);
 
   if (!clientId) return null;
 

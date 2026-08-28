@@ -70,6 +70,8 @@ export function LoginPage() {
 
           <div className="mt-7">
             <GoogleSignInButton
+              text="signin_with"
+              intent="login"
               onSuccess={() => router.push(next)}
               onError={(message) => setError(message)}
             />

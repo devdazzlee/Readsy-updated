@@ -73,6 +73,7 @@ export function SignupPage() {
           <div className="mt-7">
             <GoogleSignInButton
               text="signup_with"
+              intent="signup"
               onSuccess={() => router.push(next)}
               onError={(message) => setError(message)}
             />

@@ -6,6 +6,7 @@
     "dev": "next dev",
     "dev:server": "yarn --cwd server dev",
     "build": "next build",
+    "postbuild": "node scripts/zip-build.mjs",
     "start": "next start",
     "start:server": "yarn --cwd server start",
     "lint": "eslint"
@@ -31,6 +32,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "archiver": "^8.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "tailwindcss": "^4",

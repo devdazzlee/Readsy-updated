@@ -128,6 +128,13 @@ router.post("/google", authLimiter, async (req, res) => {
       return res.status(401).json({ error: "Please verify your email with Google first." });
     }
 
+    // Mirrors the email/password flow's own rule: /login never creates an
+    // account and /signup never silently reuses one. Google sign-in gets
+    // the same distinction instead of always auto-provisioning regardless
+    // of which page/button triggered it — "login" with no matching account
+    // should say so, not silently sign someone up.
+    const intent = req.body?.intent === "login" ? "login" : "signup";
+
     const email = payload.email.toLowerCase();
     const googleId = payload.sub;
     const name = sanitizeUserText(payload.name, 100) || email.split("@")[0];
@@ -143,6 +150,10 @@ router.post("/google", authLimiter, async (req, res) => {
         user = await prisma.user.update({
           where: { id: existing.id },
           data: { googleId },
+        });
+      } else if (intent === "login") {
+        return res.status(404).json({
+          error: "No account found for this Google account. Please create a free account first.",
         });
       } else {
         user = await prisma.user.create({

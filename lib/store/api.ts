@@ -62,7 +62,10 @@ export const api = createApi({
       query: (body) => ({ url: "/api/auth/signup", method: "POST", body }),
       invalidatesTags: ["Me", "MyActivity"],
     }),
-    googleLogin: builder.mutation<{ user: AuthUser; token: string }, { credential: string }>({
+    googleLogin: builder.mutation<
+      { user: AuthUser; token: string },
+      { credential: string; intent?: "login" | "signup" }
+    >({
       query: (body) => ({ url: "/api/auth/google", method: "POST", body }),
       invalidatesTags: ["Me", "MyActivity"],
     }),
