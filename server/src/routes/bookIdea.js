@@ -5,6 +5,7 @@ import {
   createChatCompletion,
   IDEA_SYSTEM_PROMPT,
 } from "../lib/openai.js";
+import { prisma } from "../lib/prisma.js";
 
 const router = Router();
 
@@ -45,6 +46,10 @@ router.post("/", ideaLimiter, async (req, res) => {
         .status(502)
         .json({ error: "Could not analyze that idea. Try again." });
     }
+
+    prisma.conciergeRequest
+      .create({ data: { genre, idea, analysis } })
+      .catch((err) => console.error("Could not save concierge request:", err.message));
 
     return res.json({ analysis });
   } catch (error) {

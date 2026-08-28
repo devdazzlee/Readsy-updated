@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import adminRouter from "./routes/admin.js";
+import authRouter from "./routes/auth.js";
 import chatRouter from "./routes/chat.js";
 import bookIdeaRouter from "./routes/bookIdea.js";
 import bookBlueprintRouter from "./routes/bookBlueprint.js";
@@ -41,6 +43,8 @@ app.get("/health", (_req, res) => {
   res.json({ ok: true, service: "readsy-backend" });
 });
 
+app.use("/api/auth", authRouter);
+app.use("/api/admin", adminRouter);
 app.use("/api/chat", chatRouter);
 app.use("/api/book-idea", bookIdeaRouter);
 app.use("/api/book-blueprint", bookBlueprintRouter);

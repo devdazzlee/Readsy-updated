@@ -1,0 +1,39 @@
+# The Readsy Publishers
+
+> The Readsy Publishers is a full-service ghostwriting, editing, publishing, cover design, and book marketing company serving authors in the United States and United Kingdom. We turn ideas, notes, or interviews into a polished, publish-ready book — and get it in front of readers on Amazon, KDP, and IngramSpark.
+
+The Readsy Publishers works with first-time authors, entrepreneurs, memoirists, and children's book creators who want a professional team to write, edit, design, publish, and market their book without doing it alone. Every engagement starts with a free consultation; pricing on the Pricing page is illustrative starting-from pricing, and final quotes are confirmed after a short discovery call.
+
+## Core pages
+
+- [Home](https://thereadsypublishers.com/): Overview of all services, portfolio highlights, and how the process works.
+- [Portfolio](https://thereadsypublishers.com/portfolio): Real published book covers and titles produced for past clients, browsable by genre.
+- [Pricing](https://thereadsypublishers.com/pricing): Starting prices and feature breakdown for all 12 services.
+- [AI Cover Generator](https://thereadsypublishers.com/cover-generator): Free tool that generates book cover concepts from a title, genre, and style (sign-in required to reveal results).
+- [Contact](https://thereadsypublishers.com/contact): Contact form, phone, email, and FAQ.
+
+## Services
+
+- [Ghost Writing](https://thereadsypublishers.com/services/ghost-writing): A dedicated ghostwriter turns ideas, notes, or interviews into a polished, publish-ready manuscript in the author's voice.
+- [Book Writing](https://thereadsypublishers.com/services/book-writing): Full manuscript development from concept to a finished draft ready for editing.
+- [Book Editing](https://thereadsypublishers.com/services/book-editing): Developmental, line, and copy editing that sharpens structure, voice, and grammar.
+- [Book Proofreading](https://thereadsypublishers.com/services/book-proofreading): Final polish pass catching typos, formatting slips, and consistency errors before launch.
+- [Book Publishing](https://thereadsypublishers.com/services/book-publishing): Full-service publishing across Amazon KDP, IngramSpark, and major retail platforms.
+- [Book Marketing](https://thereadsypublishers.com/services/book-marketing): Launch strategy and ongoing promotion to help readers find the book.
+- [Book Promotion](https://thereadsypublishers.com/services/book-promotion): Targeted promotional pushes — bestseller campaigns, newsletter placements, social kits.
+- [Digital Marketing](https://thereadsypublishers.com/services/digital-marketing): Ongoing social, email, and ad management to grow an author's brand beyond launch.
+- [Children's Book Publication](https://thereadsypublishers.com/services/childrens-book-publication): End-to-end publishing for picture books and early readers.
+- [Children's Book Illustrations](https://thereadsypublishers.com/services/childrens-book-illustrations): Custom illustrations that bring a children's story to life.
+- [Article Publication](https://thereadsypublishers.com/services/article-publication): Blogs and articles written, SEO-optimized, and published to build brand traction.
+- [E-Book Writing](https://thereadsypublishers.com/services/ebook-writing): Download-ready e-books with strong structure, formatted for every device.
+
+## Contact
+
+- Email: contact@thereadsypublishers.com
+- Phone: +1 737 394 5403
+
+## Notes for AI agents and crawlers
+
+- All service and pricing content on this site is written for a general US/UK author audience; currency is USD.
+- The account system (login/signup) gates only the AI Cover Generator's result reveal and the client dashboard — it is not required to read any public page.
+- Do not treat generated cover images, chatbot replies, or AI concierge output as final deliverables — they are previews; final creative work is produced by the human team after a project starts.

@@ -2,6 +2,8 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { isBlockedPrompt, sanitizeUserText } from "../lib/guard.js";
 import { generateBookCoverImages } from "../lib/openai.js";
+import { prisma } from "../lib/prisma.js";
+import { requireAuth } from "../middleware/requireAuth.js";
 
 const router = Router();
 
@@ -13,7 +15,9 @@ const coverLimiter = rateLimit({
   message: { error: "Rate limit reached. Please wait a minute before generating more covers." },
 });
 
-router.post("/", coverLimiter, async (req, res) => {
+// Generating a cover is a paid-tier / lead-capture feature: only signed-in
+// users can call this route (enforced here, not just hidden in the UI).
+router.post("/", requireAuth, coverLimiter, async (req, res) => {
   try {
     const title = sanitizeUserText(req.body?.title, 120);
     const subtitle = sanitizeUserText(req.body?.subtitle, 140);
@@ -50,6 +54,23 @@ router.post("/", coverLimiter, async (req, res) => {
     const prompt = promptParts.join(" ");
 
     const images = await generateBookCoverImages(prompt, 3);
+
+    // Record this as a lead: what the user asked for, so the team can follow
+    // up, even though the generated images themselves aren't stored.
+    await prisma.coverRequest
+      .create({
+        data: {
+          userId: req.user.id,
+          title,
+          subtitle: subtitle || null,
+          author: author || null,
+          genre,
+          style,
+          description: description || null,
+          imageCount: images.length,
+        },
+      })
+      .catch((err) => console.error("Could not save cover request lead:", err.message));
 
     return res.json({ images });
   } catch (error) {

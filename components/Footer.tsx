@@ -2,6 +2,35 @@ import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { NAV_LINKS, SERVICES } from "@/lib/content";
+import { SOCIAL_LINKS } from "@/lib/seo";
+
+// lucide-react no longer ships brand/social icons (trademark reasons), so
+// these are small inline SVGs matching the same stroke-icon visual weight.
+function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
+      <path d="M13.5 21v-7.5h2.5l.5-3h-3V8.5c0-.87.25-1.5 1.5-1.5H16.5V4.3c-.27-.04-1.2-.11-2.28-.11-2.25 0-3.79 1.37-3.79 3.9V10.5h-2.5v3h2.5V21h2.57z" />
+    </svg>
+  );
+}
+
+function InstagramIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} aria-hidden {...props}>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" />
+      <circle cx="12" cy="12" r="3.75" />
+      <circle cx="17.15" cy="6.85" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+function LinkedinIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden {...props}>
+      <path d="M6.94 8.5H4V20h2.94V8.5zM5.47 4a1.7 1.7 0 1 0 0 3.4 1.7 1.7 0 0 0 0-3.4zM20 20h-2.94v-5.9c0-1.4-.5-2.36-1.76-2.36-.96 0-1.53.65-1.78 1.27-.09.22-.11.53-.11.84V20H10.5s.04-9.85 0-10.5h2.91v1.49c.39-.6 1.08-1.46 2.63-1.46 1.92 0 3.36 1.26 3.36 3.95V20z" />
+    </svg>
+  );
+}
 
 export function Footer() {
   return (
@@ -26,17 +55,19 @@ export function Footer() {
           </p>
           <div className="mt-6 flex gap-2.5">
             {[
-              { label: "X", href: "#" },
-              { label: "in", href: "#" },
-              { label: "f", href: "#" },
+              { label: "Facebook", href: SOCIAL_LINKS.facebook, Icon: FacebookIcon },
+              { label: "Instagram", href: SOCIAL_LINKS.instagram, Icon: InstagramIcon },
+              { label: "LinkedIn", href: SOCIAL_LINKS.linkedin, Icon: LinkedinIcon },
             ].map((item) => (
               <a
                 key={item.label}
                 href={item.href}
-                aria-label={item.label}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/5 text-xs font-semibold text-white/80 transition hover:border-sky/50 hover:bg-sky/15 hover:text-white"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`The Readsy Publishers on ${item.label}`}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/12 bg-white/5 text-white/80 transition hover:border-sky/50 hover:bg-sky/15 hover:text-white"
               >
-                {item.label}
+                <item.Icon className="h-4 w-4" strokeWidth={1.75} />
               </a>
             ))}
           </div>
@@ -69,12 +100,12 @@ export function Footer() {
           <ul className="mt-4 space-y-2.5 text-sm text-white/65">
             {SERVICES.map((service) => (
               <li key={service.id}>
-                <a
-                  href={`/#${service.id}`}
+                <Link
+                  href={`/services/${service.id}`}
                   className="transition hover:text-sky-bright"
                 >
                   {service.title}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

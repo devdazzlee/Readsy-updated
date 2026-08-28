@@ -10,7 +10,6 @@ import {
   Camera,
   Check,
   Clock,
-  Download,
   Droplet,
   Eye,
   Feather,
@@ -20,6 +19,7 @@ import {
   ImagePlus,
   Layers,
   Lightbulb,
+  Lock,
   MessageCircle,
   Moon,
   Palette,
@@ -36,10 +36,13 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { generateBookCovers } from "@/lib/api";
-import { BOOK_COVERS } from "@/lib/content";
+import { BOOK_COVERS, COVER_FAQS as CONTENT_COVER_FAQS } from "@/lib/content";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
+import { errorMessage, type RTKQueryError } from "@/lib/rtkQueryError";
+import { useGenerateBookCoversMutation } from "@/lib/store/api";
 import { cn } from "@/lib/utils";
+import { AuthModal } from "./AuthModal";
+import { useAuth } from "./AuthProvider";
 import { useChat } from "./ChatProvider";
 import { useQuote } from "./QuoteProvider";
 import { StudioCta } from "./StudioCta";
@@ -114,24 +117,7 @@ const GENERATOR_PERKS = [
   { icon: ShieldCheck, text: "Free, no account required" },
 ];
 
-const COVER_FAQS = [
-  {
-    q: "Is the cover generator really free?",
-    a: "Yes. Generating concepts costs nothing and doesn't require an account. You only pay if you choose to have our design team turn a concept into your final, launch-ready cover.",
-  },
-  {
-    q: "Can I use a generated cover as my final book cover?",
-    a: "AI concepts are a strong starting point, but titles, typography, and fine detail usually need a designer's touch. Our team refines your favorite concept into a print- and platform-ready file.",
-  },
-  {
-    q: "How many times can I generate covers?",
-    a: "Generate as many times as you like. Try different genres, styles, and descriptions until you find a direction worth refining.",
-  },
-  {
-    q: "What styles can the generator create?",
-    a: "Cinematic illustration, minimalist typography, photographic, fantasy art, vintage, watercolor, dark & moody, and bold & colorful — pick whichever fits your story.",
-  },
-];
+const COVER_FAQS = CONTENT_COVER_FAQS;
 
 export function CoverGeneratorPage() {
   return (
@@ -363,6 +349,8 @@ function HeroSection() {
 
 function GeneratorSection() {
   const { openQuote } = useQuote();
+  const { user } = useAuth();
+  const [generateCovers] = useGenerateBookCoversMutation();
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -375,6 +363,7 @@ function GeneratorSection() {
   const [error, setError] = useState<string | null>(null);
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   function goToStep(next: number) {
     if (next < 0 || next >= FORM_STEPS.length) return;
@@ -391,29 +380,46 @@ function GeneratorSection() {
     return () => clearInterval(interval);
   }, [loading]);
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!title.trim() || loading) return;
+  async function runGeneration() {
     setLoading(true);
     setError(null);
     setImages(null);
     try {
-      const result = await generateBookCovers({
+      const result = await generateCovers({
         title: title.trim(),
         subtitle: subtitle.trim() || undefined,
         author: author.trim() || undefined,
         genre,
         style,
         description: description.trim() || undefined,
-      });
-      setImages(result);
+      }).unwrap();
+      setImages(result.images);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Cover generation failed",
-      );
+      setError(errorMessage(err as RTKQueryError, "Cover generation failed"));
     } finally {
       setLoading(false);
     }
+  }
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!title.trim() || loading) return;
+
+    // Don't gate the whole page behind a login wall — let visitors fill out
+    // the whole form freely, and only ask them to sign in right at the
+    // point of value (generating), the way most modern SaaS sign-up flows
+    // do. Their inputs are preserved, so the modal never feels like a dead end.
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
+
+    await runGeneration();
+  }
+
+  function handleAuthenticated() {
+    setAuthModalOpen(false);
+    void runGeneration();
   }
 
   return (
@@ -800,8 +806,14 @@ function GeneratorSection() {
               </div>
               {step === FORM_STEPS.length - 1 ? (
                 <p className="mt-2.5 text-center text-[11px] text-text-muted">
-                  Takes about 30-60 seconds. AI-generated concepts — final
-                  covers are refined by our design team.
+                  {user ? (
+                    "Takes about 30-60 seconds. AI-generated concepts — final covers are refined by our design team."
+                  ) : (
+                    <span className="inline-flex items-center justify-center gap-1.5">
+                      <Lock className="h-3 w-3" strokeWidth={2} />
+                      Free account required — we&apos;ll ask you to sign in when you generate.
+                    </span>
+                  )}
                 </p>
               ) : null}
             </form>
@@ -817,6 +829,14 @@ function GeneratorSection() {
             />
           </MotionItem>
         </div>
+
+        <AuthModal
+          open={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          onAuthenticated={handleAuthenticated}
+          title="Sign in to generate your covers"
+          subtitle="Create a free account to reveal your three AI-generated concepts."
+        />
       </div>
     </MotionSection>
   );
@@ -988,32 +1008,48 @@ function ResultsPanel({
                       delay: i * 0.12,
                       ease: [0.22, 1, 0.36, 1],
                     }}
-                    className="group relative aspect-[2/3] overflow-hidden rounded-xl shadow-[0_20px_40px_-16px_rgba(0,0,0,0.6)] ring-1 ring-white/15"
+                    className="group relative aspect-[2/3] select-none overflow-hidden rounded-xl shadow-[0_20px_40px_-16px_rgba(0,0,0,0.6)] ring-1 ring-white/15"
+                    onContextMenu={(e) => e.preventDefault()}
                   >
                     <Image
                       src={src}
                       alt={`Generated book cover concept ${i + 1}`}
                       fill
                       unoptimized
-                      className="object-cover transition duration-500 group-hover:scale-105"
+                      draggable={false}
+                      onDragStart={(e) => e.preventDefault()}
+                      className="pointer-events-none object-cover transition duration-500 group-hover:scale-105"
                     />
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-navy-deep/70 via-transparent to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
-                    <a
-                      href={src}
-                      download={`book-cover-concept-${i + 1}.png`}
-                      className="absolute bottom-2 right-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-navy opacity-0 shadow-sm transition duration-300 group-hover:opacity-100 hover:bg-white"
-                      aria-label={`Download cover concept ${i + 1}`}
-                    >
-                      <Download className="h-4 w-4" strokeWidth={2} />
-                    </a>
+                    {/* Preview watermark — final files are delivered by our design team, not downloaded here */}
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+                      <div
+                        className="flex -rotate-[30deg] flex-col gap-6 opacity-25"
+                        aria-hidden
+                      >
+                        {[0, 1, 2].map((row) => (
+                          <div key={row} className="flex gap-6 whitespace-nowrap">
+                            {[0, 1].map((col) => (
+                              <span
+                                key={col}
+                                className="text-[11px] font-bold uppercase tracking-[0.2em] text-white"
+                              >
+                                Readsy Preview
+                              </span>
+                            ))}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
 
               <div>
                 <p className="text-[11px] text-white/50">
-                  AI-generated drafts. Titles and author names may need light
-                  touch-up — our design team perfects every detail.
+                  Preview only — concepts aren&apos;t available to download.
+                  Our design team delivers your final, watermark-free cover
+                  file directly once you start a project.
                 </p>
 
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">

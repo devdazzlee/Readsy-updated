@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, FileCheck, Globe, Layout, MessageCircle, Users2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -14,10 +14,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("childrens-book-publication")!;
+const related = getRelatedServices("childrens-book-publication");
 const BENEFIT_ICONS = [Layout, FileCheck, Globe, Users2];
 const AGE_RANGES = ["Ages 0-2 · Board Books", "Ages 3-6 · Picture Books", "Ages 6-9 · Early Readers"];
 
@@ -148,6 +150,8 @@ export function ChildrensBookPublicationPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/childrens-book-publication-secondary.jpg"

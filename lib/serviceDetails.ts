@@ -923,3 +923,36 @@ export const SERVICE_DETAILS: ServiceDetail[] = [
 export function getServiceDetail(slug: string) {
   return SERVICE_DETAILS.find((s) => s.slug === slug);
 }
+
+// Topically related services per page, used to cross-link the 12 service
+// pages into a coherent internal-linking cluster (each links to 3 others
+// a reader in that service would plausibly need next).
+export const RELATED_SERVICES: Record<string, string[]> = {
+  "ghost-writing": ["book-editing", "book-publishing", "book-marketing"],
+  "book-writing": ["ghost-writing", "book-editing", "book-publishing"],
+  "book-editing": ["book-proofreading", "book-writing", "book-publishing"],
+  "book-proofreading": ["book-editing", "book-publishing", "book-writing"],
+  "book-publishing": ["book-marketing", "book-promotion", "book-editing"],
+  "book-marketing": ["book-promotion", "digital-marketing", "book-publishing"],
+  "book-promotion": ["book-marketing", "digital-marketing", "book-publishing"],
+  "digital-marketing": ["book-marketing", "book-promotion", "article-publication"],
+  "childrens-book-publication": [
+    "childrens-book-illustrations",
+    "book-publishing",
+    "book-editing",
+  ],
+  "childrens-book-illustrations": [
+    "childrens-book-publication",
+    "book-publishing",
+    "ghost-writing",
+  ],
+  "article-publication": ["digital-marketing", "ebook-writing", "book-marketing"],
+  "ebook-writing": ["book-writing", "book-editing", "article-publication"],
+};
+
+export function getRelatedServices(slug: string): ServiceDetail[] {
+  const slugs = RELATED_SERVICES[slug] || [];
+  return slugs
+    .map((s) => getServiceDetail(s))
+    .filter((s): s is ServiceDetail => Boolean(s));
+}

@@ -150,3 +150,14 @@ body {
   width: 0;
   height: 0;
 }
+
+/* Fully hidden scrollbar for swipeable pill rows (tab bars, chip filters) —
+   the row still scrolls normally, it just doesn't show a scrollbar track. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

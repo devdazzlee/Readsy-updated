@@ -4,17 +4,35 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Menu, MessageCircle, Phone, X } from "lucide-react";
+import {
+  ChevronDown,
+  LogOut,
+  Menu,
+  MessageCircle,
+  Phone,
+  User as UserIcon,
+  X,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NAV_LINKS, PRICING_PLANS } from "@/lib/content";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useAuth } from "./AuthProvider";
 import { useChat } from "./ChatProvider";
 import { useQuote } from "./QuoteProvider";
 
 export function Header() {
   const { openQuote } = useQuote();
   const { openChat } = useChat();
+  const { user, loading, logout } = useAuth();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -165,6 +183,69 @@ export function Header() {
         </nav>
 
         <div className="flex items-center justify-self-end gap-2">
+          {loading ? (
+            <div
+              aria-hidden
+              className="hidden h-10 w-[92px] animate-pulse rounded-full bg-muted sm:block"
+            />
+          ) : user ? (
+            <div className="hidden items-center gap-2 sm:flex">
+              {user.isAdmin ? (
+                <Link
+                  href="/dashboard"
+                  className={cn(
+                    buttonVariants({ variant: "outline", size: "sm" }),
+                    "rounded-full px-4",
+                  )}
+                >
+                  Dashboard
+                </Link>
+              ) : null}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    title={user.name}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-navy text-xs font-bold text-white transition hover:bg-navy-deep"
+                  >
+                    {user.name.trim().charAt(0).toUpperCase() || "A"}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel className="normal-case tracking-normal">
+                    <span className="block truncate text-sm font-semibold text-navy">
+                      {user.name}
+                    </span>
+                    <span className="block truncate text-xs font-normal text-text-muted">
+                      {user.email}
+                    </span>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">
+                      <UserIcon className="h-4 w-4 text-text-muted" />
+                      My Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem destructive onClick={logout}>
+                    <LogOut className="h-4 w-4" />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "hidden rounded-full px-4 sm:inline-flex",
+              )}
+            >
+              Log In
+            </Link>
+          )}
           <a
             href="tel:+17373945403"
             className="mr-1 hidden items-center gap-1.5 rounded-full px-2 py-2 text-sm font-medium text-navy/70 transition hover:text-navy xl:inline-flex"
@@ -279,6 +360,55 @@ export function Header() {
                 +1 737 394 5403
               </a>
               <div className="mt-3 grid gap-2 border-t border-navy/8 pt-3">
+                {loading ? (
+                  <div className="h-11 animate-pulse rounded-xl bg-muted" />
+                ) : user ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl border border-muted-border px-3 py-2.5 text-center text-sm font-medium text-navy hover:bg-sky-soft"
+                    >
+                      My Profile
+                    </Link>
+                    {user.isAdmin ? (
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setMenuOpen(false)}
+                        className="rounded-xl border border-muted-border px-3 py-2.5 text-center text-sm font-medium text-navy hover:bg-sky-soft"
+                      >
+                        Dashboard
+                      </Link>
+                    ) : null}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        logout();
+                      }}
+                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-navy hover:bg-sky-soft"
+                    >
+                      Log out ({user.name.split(" ")[0]})
+                    </button>
+                  </>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl border border-muted-border px-3 py-2.5 text-center text-sm font-medium text-navy hover:bg-sky-soft"
+                    >
+                      Log In
+                    </Link>
+                    <Link
+                      href="/signup"
+                      onClick={() => setMenuOpen(false)}
+                      className="rounded-xl bg-navy px-3 py-2.5 text-center text-sm font-medium text-white hover:bg-navy-deep"
+                    >
+                      Sign Up
+                    </Link>
+                  </div>
+                )}
                 <Button
                   variant="navy"
                   className="rounded-full"

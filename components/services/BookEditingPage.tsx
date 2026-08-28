@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Layers, MessageCircle, PenTool, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -14,10 +14,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("book-editing")!;
+const related = getRelatedServices("book-editing");
 const BENEFIT_ICONS = [Layers, PenTool, Search];
 
 export function BookEditingPage() {
@@ -168,6 +170,8 @@ export function BookEditingPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/book-editing-secondary.jpg"

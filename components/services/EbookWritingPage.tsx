@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, FileCheck, Feather, Layout, MessageCircle, Tablet } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -14,10 +14,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("ebook-writing")!;
+const related = getRelatedServices("ebook-writing");
 const BENEFIT_ICONS = [Layout, Feather, Tablet, FileCheck];
 const FORMATS = ["EPUB", "PDF", "Kindle (MOBI)", "Apple Books"];
 
@@ -172,6 +174,8 @@ export function EbookWritingPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/ebook-writing-secondary.jpg"

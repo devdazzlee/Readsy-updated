@@ -2,10 +2,10 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, Loader2, MessageCircle, Minus, X } from "lucide-react";
-import ReactMarkdown from "react-markdown";
+import { ArrowUp, Loader2, Mail, MessageCircle, Minus, User, X } from "lucide-react";
 import { sendChatMessage } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { ChatMarkdown } from "./ChatMarkdown";
 import { useChat } from "./ChatProvider";
 import { ProtectedAiContent } from "./ProtectedAiContent";
 
@@ -23,13 +23,55 @@ const SUGGESTIONS = [
   "Publishing on Amazon",
 ];
 
+const CLIENT_ID_KEY = "readsy_chat_client_id";
+const IDENTITY_KEY = "readsy_chat_identity";
+
+function getClientId() {
+  if (typeof window === "undefined") return "";
+  try {
+    let id = window.localStorage.getItem(CLIENT_ID_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      window.localStorage.setItem(CLIENT_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    return "";
+  }
+}
+
+type Identity = { name: string; email: string } | null;
+
+function getStoredIdentity(): Identity {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(IDENTITY_KEY);
+    return raw ? (JSON.parse(raw) as Identity) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function ChatWidget() {
   const { isOpen, closeChat, toggleChat } = useChat();
   const [messages, setMessages] = useState<Msg[]>([STARTER]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [clientId, setClientId] = useState("");
+  const [identity, setIdentity] = useState<Identity>(null);
+  const [identityDismissed, setIdentityDismissed] = useState(false);
+  // Explicitly re-opens the capture form even if we already have identity
+  // stored (e.g. the visitor asks to share/update their details, or taps
+  // "Not you?") — the automatic prompt below only fires once, so this is
+  // the only way back to the form after that.
+  const [forceIdentityPrompt, setForceIdentityPrompt] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setClientId(getClientId());
+    setIdentity(getStoredIdentity());
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -39,9 +81,46 @@ export function ChatWidget() {
     });
   }, [messages, isOpen, loading]);
 
+  const userMessageCount = messages.filter((m) => m.role === "user").length;
+  const showIdentityPrompt =
+    isOpen &&
+    !identityDismissed &&
+    (forceIdentityPrompt || (!identity && userMessageCount >= 1));
+
+  function saveIdentity(next: { name: string; email: string }) {
+    setIdentity(next);
+    setForceIdentityPrompt(false);
+    setIdentityDismissed(false);
+    try {
+      window.localStorage.setItem(IDENTITY_KEY, JSON.stringify(next));
+    } catch {
+      // Non-critical — identity just won't persist across page reloads.
+    }
+  }
+
+  function clearIdentity() {
+    setIdentity(null);
+    setForceIdentityPrompt(true);
+    try {
+      window.localStorage.removeItem(IDENTITY_KEY);
+    } catch {
+      // Non-critical.
+    }
+  }
+
+  // Lets a visitor trigger the contact-details form just by asking for it in
+  // plain language, instead of only ever showing it automatically once.
+  const SHARE_INTENT_RE =
+    /\b(my\s+(email|e-mail|phone|number|name)\s+is|(share|give|leave|provide)\s+(my\s+)?(email|e-mail|phone|number|name|contact|details)|contact\s+(me|info|details)|reach\s+(out\s+to\s+)?me|call\s+me\s+back)\b/i;
+
   async function send(text: string) {
     const trimmed = text.trim();
     if (!trimmed || loading) return;
+
+    if (SHARE_INTENT_RE.test(trimmed)) {
+      setIdentityDismissed(false);
+      setForceIdentityPrompt(true);
+    }
 
     const nextMessages: Msg[] = [
       ...messages,
@@ -54,7 +133,11 @@ export function ChatWidget() {
 
     try {
       const payload = nextMessages.slice(1);
-      const reply = await sendChatMessage(payload);
+      const reply = await sendChatMessage(payload, {
+        clientId,
+        name: identity?.name,
+        email: identity?.email,
+      });
       setMessages((prev) => [...prev, { role: "assistant", content: reply }]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
@@ -142,31 +225,7 @@ export function ChatWidget() {
                   >
                     {msg.role === "assistant" ? (
                       <ProtectedAiContent>
-                        <ReactMarkdown
-                          components={{
-                            p: ({ children }) => (
-                              <p className="mb-2 last:mb-0">{children}</p>
-                            ),
-                            strong: ({ children }) => (
-                              <strong className="font-semibold text-navy">
-                                {children}
-                              </strong>
-                            ),
-                            ul: ({ children }) => (
-                              <ul className="mb-2 list-disc space-y-1 pl-4 last:mb-0">
-                                {children}
-                              </ul>
-                            ),
-                            ol: ({ children }) => (
-                              <ol className="mb-2 list-decimal space-y-1 pl-4 last:mb-0">
-                                {children}
-                              </ol>
-                            ),
-                            li: ({ children }) => <li>{children}</li>,
-                          }}
-                        >
-                          {msg.content}
-                        </ReactMarkdown>
+                        <ChatMarkdown content={msg.content} />
                       </ProtectedAiContent>
                     ) : (
                       msg.content
@@ -174,6 +233,18 @@ export function ChatWidget() {
                   </div>
                 </motion.div>
               ))}
+
+              {showIdentityPrompt ? (
+                <IdentityCapture
+                  initialName={identity?.name}
+                  initialEmail={identity?.email}
+                  onSave={saveIdentity}
+                  onDismiss={() => {
+                    setIdentityDismissed(true);
+                    setForceIdentityPrompt(false);
+                  }}
+                />
+              ) : null}
 
               {messages.length === 1 && !loading && (
                 <div className="flex flex-wrap gap-2 pt-1">
@@ -217,6 +288,21 @@ export function ChatWidget() {
                 </p>
               )}
             </div>
+
+            {identity && !showIdentityPrompt ? (
+              <div className="flex items-center justify-between gap-2 border-t border-navy/8 bg-sky-soft/40 px-4 py-1.5 text-[11px] text-navy/70">
+                <span className="truncate">
+                  Chatting as <span className="font-semibold text-navy">{identity.name}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={clearIdentity}
+                  className="shrink-0 font-semibold text-sky hover:text-sky-bright"
+                >
+                  Not you?
+                </button>
+              </div>
+            ) : null}
 
             <form
               onSubmit={onSubmit}
@@ -304,5 +390,78 @@ export function ChatWidget() {
         </AnimatePresence>
       </motion.button>
     </div>
+  );
+}
+
+function IdentityCapture({
+  initialName,
+  initialEmail,
+  onSave,
+  onDismiss,
+}: {
+  initialName?: string;
+  initialEmail?: string;
+  onSave: (identity: { name: string; email: string }) => void;
+  onDismiss: () => void;
+}) {
+  const [name, setName] = useState(initialName || "");
+  const [email, setEmail] = useState(initialEmail || "");
+
+  function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !email.trim()) return;
+    onSave({ name: name.trim(), email: email.trim() });
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-sky/25 bg-sky-soft/50 p-3.5"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-[12px] font-semibold text-navy">
+          {initialName
+            ? "Update your contact details"
+            : "Want a specialist to follow up on this chat?"}
+        </p>
+        <button
+          type="button"
+          onClick={onDismiss}
+          aria-label="Dismiss"
+          className="shrink-0 rounded-md p-0.5 text-navy/40 hover:text-navy"
+        >
+          <X className="h-3.5 w-3.5" />
+        </button>
+      </div>
+      <form onSubmit={handleSubmit} className="mt-2.5 flex flex-col gap-1.5">
+        <div className="relative">
+          <User className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            className="h-9 w-full rounded-lg border border-white bg-white pl-8 pr-2.5 text-xs text-navy outline-none focus:border-sky"
+          />
+        </div>
+        <div className="relative">
+          <Mail className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-muted" />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@email.com"
+            className="h-9 w-full rounded-lg border border-white bg-white pl-8 pr-2.5 text-xs text-navy outline-none focus:border-sky"
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={!name.trim() || !email.trim()}
+          className="mt-0.5 h-9 rounded-lg bg-sky text-xs font-semibold text-white transition hover:bg-sky-bright disabled:opacity-50"
+        >
+          {initialName ? "Update details" : "Share details"}
+        </button>
+      </form>
+    </motion.div>
   );
 }

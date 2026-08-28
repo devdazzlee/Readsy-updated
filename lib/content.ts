@@ -496,6 +496,44 @@ export const PRICING_FAQS = [
   },
 ] as const;
 
+export const CONTACT_FAQS = [
+  {
+    q: "How soon will someone respond?",
+    a: "A publishing specialist reviews every message and replies within one business day — often the same afternoon.",
+  },
+  {
+    q: "Do I need a finished manuscript to reach out?",
+    a: "No. Many authors contact us with just an idea. We help shape the outline, then move into writing, editing, or design.",
+  },
+  {
+    q: "Is my project kept confidential?",
+    a: "Yes. Every inquiry and manuscript is handled under a confidentiality-first process, with NDAs available on request.",
+  },
+  {
+    q: "Can we talk over video instead of email?",
+    a: "Absolutely. Mention it in your message or use Live Chat and we will schedule a Zoom or phone consultation.",
+  },
+] as const;
+
+export const COVER_FAQS = [
+  {
+    q: "Is the cover generator really free?",
+    a: "Yes. Generating concepts costs nothing and doesn't require an account. You only pay if you choose to have our design team turn a concept into your final, launch-ready cover.",
+  },
+  {
+    q: "Can I use a generated cover as my final book cover?",
+    a: "AI concepts are a strong starting point, but titles, typography, and fine detail usually need a designer's touch. Our team refines your favorite concept into a print- and platform-ready file.",
+  },
+  {
+    q: "How many times can I generate covers?",
+    a: "Generate as many times as you like. Try different genres, styles, and descriptions until you find a direction worth refining.",
+  },
+  {
+    q: "What styles can the generator create?",
+    a: "Cinematic illustration, minimalist typography, photographic, fantasy art, vintage, watercolor, dark & moody, and bold & colorful — pick whichever fits your story.",
+  },
+] as const;
+
 export const PROCESS_STEPS = [
   {
     step: "01",

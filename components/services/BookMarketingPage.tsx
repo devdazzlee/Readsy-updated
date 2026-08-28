@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Globe, MessageCircle, Target, TrendingUp, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -14,10 +14,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("book-marketing")!;
+const related = getRelatedServices("book-marketing");
 const BENEFIT_ICONS = [Target, TrendingUp, Globe, Users];
 const BARS = [28, 42, 35, 58, 71, 64, 89];
 
@@ -148,6 +150,8 @@ export function BookMarketingPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/book-marketing-secondary.jpg"

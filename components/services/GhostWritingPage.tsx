@@ -19,14 +19,15 @@ import {
   UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
 import { StudioCta } from "../StudioCta";
-import { FaqAccordionItem } from "./shared";
+import { FaqAccordionItem, RelatedServices } from "./shared";
 
 const service = getServiceDetail("ghost-writing")!;
+const related = getRelatedServices("ghost-writing");
 
 const TRANSFORM = {
   before:
@@ -458,6 +459,8 @@ export function GhostWritingPage() {
           </MotionItem>
         </div>
       </MotionSection>
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/ghost-writing-secondary.jpg"

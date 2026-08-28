@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock3, Layout, MessageCircle, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -14,10 +14,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("book-proofreading")!;
+const related = getRelatedServices("book-proofreading");
 const BENEFIT_ICONS = [Search, Layout, RefreshCw, Clock3];
 
 const COUNTERS = [
@@ -185,6 +187,8 @@ export function BookProofreadingPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/book-proofreading-secondary.jpg"

@@ -1,0 +1,109 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String
+  email         String         @unique
+  phone         String?
+  passwordHash  String
+  isAdmin       Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  coverRequests CoverRequest[]
+
+  @@map("users")
+}
+
+model CoverRequest {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String
+  subtitle      String?
+  author        String?
+  genre         String
+  style         String
+  description   String?
+  imageCount    Int      @default(0)
+  wantsFollowUp Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@map("cover_requests")
+}
+
+// Every quote/contact form submission across the site (contact page, quote
+// modal, homepage quote form, etc). `source` tells you which form it was.
+model Lead {
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String
+  project    String?
+  smsConsent String?
+  source     String
+  createdAt  DateTime @default(now())
+
+  @@map("leads")
+}
+
+// Anonymous usage log for the free AI Book Concierge tool — no contact info
+// is collected here; visitors who want follow-up convert via the quote form.
+model ConciergeRequest {
+  id        String   @id @default(cuid())
+  genre     String
+  idea      String
+  analysis  String?
+  createdAt DateTime @default(now())
+
+  @@map("concierge_requests")
+}
+
+// Anonymous usage log for the free AI Book Blueprint tool.
+model BlueprintRequest {
+  id        String   @id @default(cuid())
+  genre     String
+  goal      String
+  tone      String
+  idea      String
+  blueprint String?
+  createdAt DateTime @default(now())
+
+  @@map("blueprint_requests")
+}
+
+// One row per browser chat-widget session. name/email are filled in only if
+// the visitor shares them through the optional in-chat capture prompt.
+model ChatSession {
+  id          String        @id @default(cuid())
+  clientId    String        @unique
+  name        String?
+  email       String?
+  phone       String?
+  // Set once a Lead row has been created from this session's identity, so
+  // we only ever create one lead per conversation even though the widget
+  // resends identity with every message after the visitor shares it.
+  leadCreated Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  lastMessage DateTime      @default(now())
+  messages    ChatMessage[]
+
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        String      @id @default(cuid())
+  sessionId String
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      String
+  content   String
+  createdAt DateTime    @default(now())
+
+  @@map("chat_messages")
+}

@@ -11,12 +11,23 @@ export function QuoteModal({ autoOpen = true }: { autoOpen?: boolean }) {
   const { isOpen, openQuote, closeQuote } = useQuote();
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Auto-open on every visit. Do NOT gate with a ref that survives
-  // Strict Mode cleanup — that cancels the timer and blocks reopen.
+  // Auto-open once per browser session. sessionStorage is a persisted
+  // value (not a ref), so it's safe across Strict Mode remounts and
+  // client-side navigation, and resets when the tab/browser closes.
   useEffect(() => {
     if (!autoOpen) return;
+    try {
+      if (sessionStorage.getItem("quoteModalSeen") === "1") return;
+    } catch {
+      // sessionStorage unavailable (private mode, etc.) — fall through
+    }
     const timer = window.setTimeout(() => {
       openQuote();
+      try {
+        sessionStorage.setItem("quoteModalSeen", "1");
+      } catch {
+        /* ignore */
+      }
     }, 1100);
     return () => window.clearTimeout(timer);
   }, [autoOpen, openQuote]);

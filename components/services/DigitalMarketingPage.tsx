@@ -13,7 +13,7 @@ import {
   Users2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -23,10 +23,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("digital-marketing")!;
+const related = getRelatedServices("digital-marketing");
 const BENEFIT_ICONS = [Megaphone, Mail, TrendingUp, BarChart3];
 
 const DASHBOARD_TILES = [
@@ -170,6 +172,8 @@ export function DigitalMarketingPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/digital-marketing-secondary.jpg"

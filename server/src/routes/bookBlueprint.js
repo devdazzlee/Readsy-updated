@@ -2,6 +2,7 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { isBlockedPrompt, sanitizeUserText } from "../lib/guard.js";
 import { createChatCompletion } from "../lib/openai.js";
+import { prisma } from "../lib/prisma.js";
 
 const router = Router();
 
@@ -79,6 +80,10 @@ router.post("/", blueprintLimiter, async (req, res) => {
         .status(502)
         .json({ error: "Could not build that blueprint. Try again." });
     }
+
+    prisma.blueprintRequest
+      .create({ data: { genre, goal, tone, idea, blueprint } })
+      .catch((err) => console.error("Could not save blueprint request:", err.message));
 
     return res.json({ blueprint });
   } catch (error) {

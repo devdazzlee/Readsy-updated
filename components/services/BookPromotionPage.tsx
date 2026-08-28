@@ -14,7 +14,7 @@ import {
   Users2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -24,10 +24,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("book-promotion")!;
+const related = getRelatedServices("book-promotion");
 const BENEFIT_ICONS = [TrendingUp, Mail, Megaphone, BarChart3];
 
 const CHANNELS = [
@@ -168,6 +170,8 @@ export function BookPromotionPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/book-promotion-secondary.jpg"

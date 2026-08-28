@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, FileCheck, Globe, Layout, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -14,10 +14,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("book-publishing")!;
+const related = getRelatedServices("book-publishing");
 const BENEFIT_ICONS = [Layout, FileCheck, Globe, BookOpen];
 
 const PLATFORMS = ["Amazon KDP", "IngramSpark", "Apple Books", "Barnes & Noble", "Kobo", "Google Play Books"];
@@ -163,6 +165,8 @@ export function BookPublishingPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/book-publishing-secondary.jpg"

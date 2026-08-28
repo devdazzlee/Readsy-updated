@@ -342,6 +342,86 @@ export function FaqBlock({
   );
 }
 
+export function RelatedServices({
+  items,
+  tone = "light",
+}: {
+  items: { slug: string; title: string; tagline: string }[];
+  tone?: "light" | "dark";
+}) {
+  if (items.length === 0) return null;
+  const dark = tone === "dark";
+
+  return (
+    <MotionSection className={dark ? "bg-navy-deep" : "bg-muted/40"}>
+      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+        <MotionItem className="mx-auto max-w-2xl text-center">
+          <p
+            className={cn(
+              "text-xs font-semibold uppercase tracking-[0.18em]",
+              dark ? "text-sky-bright" : "text-sky",
+            )}
+          >
+            Pair it with
+          </p>
+          <h2
+            className={cn(
+              "mt-3 font-display text-2xl font-bold tracking-tight sm:text-3xl",
+              dark ? "text-white" : "text-navy",
+            )}
+          >
+            Related services
+          </h2>
+        </MotionItem>
+
+        <div className="mt-10 grid gap-4 sm:grid-cols-3">
+          {items.map((item) => (
+            <MotionItem key={item.slug}>
+              <Link
+                href={`/services/${item.slug}`}
+                className={cn(
+                  "group flex h-full flex-col rounded-2xl border p-6 transition duration-300 hover:-translate-y-1",
+                  dark
+                    ? "border-white/12 bg-white/[0.04] hover:border-sky-bright/40 hover:bg-white/[0.08]"
+                    : "border-muted-border bg-white hover:border-sky/35 hover:shadow-[0_24px_50px_-32px_rgba(11,31,58,0.4)]",
+                )}
+              >
+                <h3
+                  className={cn(
+                    "font-display text-lg font-semibold",
+                    dark ? "text-white" : "text-navy",
+                  )}
+                >
+                  {item.title}
+                </h3>
+                <p
+                  className={cn(
+                    "mt-2 flex-1 text-sm leading-relaxed",
+                    dark ? "text-white/60" : "text-text-muted",
+                  )}
+                >
+                  {item.tagline}
+                </p>
+                <span
+                  className={cn(
+                    "mt-4 inline-flex items-center gap-1.5 text-sm font-semibold transition",
+                    dark
+                      ? "text-sky-bright group-hover:text-white"
+                      : "text-sky group-hover:text-sky-bright",
+                  )}
+                >
+                  Learn more
+                  <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                </span>
+              </Link>
+            </MotionItem>
+          ))}
+        </div>
+      </div>
+    </MotionSection>
+  );
+}
+
 export function Breadcrumb({
   label,
   tone = "light",

@@ -29,7 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { submitQuote } from "@/lib/api";
-import { SERVICES } from "@/lib/content";
+import { CONTACT_FAQS, SERVICES } from "@/lib/content";
 import { fadeScale, fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useChat } from "./ChatProvider";
@@ -85,25 +85,6 @@ const WHY_REACH_OUT = [
     icon: Clock3,
     title: "No pressure, no spam",
     text: "You get a clear proposal, not a sales script. Reply on your own schedule.",
-  },
-] as const;
-
-const FAQS = [
-  {
-    q: "How soon will someone respond?",
-    a: "A publishing specialist reviews every message and replies within one business day — often the same afternoon.",
-  },
-  {
-    q: "Do I need a finished manuscript to reach out?",
-    a: "No. Many authors contact us with just an idea. We help shape the outline, then move into writing, editing, or design.",
-  },
-  {
-    q: "Is my project kept confidential?",
-    a: "Yes. Every inquiry and manuscript is handled under a confidentiality-first process, with NDAs available on request.",
-  },
-  {
-    q: "Can we talk over video instead of email?",
-    a: "Absolutely. Mention it in your message or use Live Chat and we will schedule a Zoom or phone consultation.",
   },
 ] as const;
 
@@ -463,7 +444,7 @@ function FaqSection() {
         </MotionItem>
 
         <MotionItem className="mt-10 space-y-3">
-          {FAQS.map((item) => (
+          {CONTACT_FAQS.map((item) => (
             <FaqItem key={item.q} question={item.q} answer={item.a} />
           ))}
         </MotionItem>

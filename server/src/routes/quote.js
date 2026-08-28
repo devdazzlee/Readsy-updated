@@ -2,6 +2,7 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { sanitizeUserText } from "../lib/guard.js";
 import { sendQuoteEmail } from "../lib/mail.js";
+import { prisma } from "../lib/prisma.js";
 
 const router = Router();
 
@@ -38,14 +39,24 @@ router.post("/", quoteLimiter, async (req, res) => {
       return res.status(400).json({ error: "Please enter a valid email address." });
     }
 
-    await sendQuoteEmail({
-      name,
-      email,
-      phone,
-      project,
-      smsConsent,
-      source,
+    const results = await Promise.allSettled([
+      sendQuoteEmail({ name, email, phone, project, smsConsent, source }),
+      prisma.lead.create({
+        data: { name, email, phone, project: project || null, smsConsent, source },
+      }),
+    ]);
+
+    results.forEach((r) => {
+      if (r.status === "rejected") {
+        console.error("Quote submission side-effect failed:", r.reason?.message);
+      }
     });
+
+    // Only fail the request if BOTH the email and the DB record failed —
+    // one succeeding is enough for the lead to reach the team.
+    if (results.every((r) => r.status === "rejected")) {
+      throw new Error("Both email delivery and lead storage failed");
+    }
 
     return res.json({ ok: true });
   } catch (error) {

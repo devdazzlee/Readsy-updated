@@ -4,7 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, FileCheck, MessageCircle, Paintbrush, Palette, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceDetail } from "@/lib/serviceDetails";
+import { getRelatedServices, getServiceDetail } from "@/lib/serviceDetails";
 import { fadeUp, MotionItem, MotionSection, stagger } from "@/lib/motion";
 import { useChat } from "../ChatProvider";
 import { useQuote } from "../QuoteProvider";
@@ -14,10 +14,12 @@ import {
   DeliverablesBanner,
   FaqBlock,
   ProcessStepper,
+  RelatedServices,
   SubServicesGrid,
 } from "./shared";
 
 const service = getServiceDetail("childrens-book-illustrations")!;
+const related = getRelatedServices("childrens-book-illustrations");
 const BENEFIT_ICONS = [Palette, Paintbrush, RefreshCw, FileCheck];
 
 export function ChildrensBookIllustrationsPage() {
@@ -147,6 +149,8 @@ export function ChildrensBookIllustrationsPage() {
       />
 
       <FaqBlock faqs={service.faqs} />
+
+      <RelatedServices items={related} />
 
       <StudioCta
         image="/images/services/childrens-book-illustrations-hero.jpg"
