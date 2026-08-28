@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { BookX } from "lucide-react";
 import { ChatWidget } from "@/components/ChatWidget";
 import { Footer } from "@/components/Footer";

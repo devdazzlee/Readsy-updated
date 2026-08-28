@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "./Link";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
   ChevronDown,
+  Loader2,
   LogOut,
   Menu,
   MessageCircle,
@@ -34,11 +35,28 @@ export function Header() {
   const { openChat } = useChat();
   const { user, loading, logout } = useAuth();
   const pathname = usePathname();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
+
+  // Clearing the token alone doesn't guarantee every consumer on the page
+  // re-renders instantly (RTK Query cache resets, header/dashboard state,
+  // etc. all update reactively but not always visibly in the same tick) —
+  // and if you log out from a protected page like /dashboard or /profile,
+  // staying put just leaves you looking at a stale, now-unauthorized page.
+  // Explicitly navigating to the homepage after logout sidesteps all of
+  // that: the page you're on unmounts, a fresh Header mounts already
+  // reading the cleared auth state, so there's nothing stale left to see —
+  // no manual refresh needed.
+  function handleLogout() {
+    setLoggingOut(true);
+    logout();
+    router.push("/");
+  }
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -228,9 +246,13 @@ export function Header() {
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem destructive onClick={logout}>
-                    <LogOut className="h-4 w-4" />
-                    Log out
+                  <DropdownMenuItem destructive disabled={loggingOut} onClick={handleLogout}>
+                    {loggingOut ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <LogOut className="h-4 w-4" />
+                    )}
+                    {loggingOut ? "Logging out..." : "Log out"}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -382,13 +404,15 @@ export function Header() {
                     ) : null}
                     <button
                       type="button"
+                      disabled={loggingOut}
                       onClick={() => {
                         setMenuOpen(false);
-                        logout();
+                        handleLogout();
                       }}
-                      className="flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-navy hover:bg-sky-soft"
+                      className="flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-navy hover:bg-sky-soft disabled:opacity-60"
                     >
-                      Log out ({user.name.split(" ")[0]})
+                      {loggingOut ? "Logging out..." : `Log out (${user.name.split(" ")[0]})`}
+                      {loggingOut ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                     </button>
                   </>
                 ) : (

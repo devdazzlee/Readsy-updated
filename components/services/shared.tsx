@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import Link from "next/link";
+import Link from "../Link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Check, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";

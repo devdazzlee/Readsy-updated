@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import Link from "next/link";
+import Link from "./Link";
 import { motion } from "framer-motion";
 import {
   CheckCircle2,
@@ -24,6 +24,7 @@ import {
   useUpdatePasswordMutation,
   useUpdateProfileMutation,
 } from "@/lib/store/api";
+import { useAppSelector } from "@/lib/store/hooks";
 import { errorMessage, type RTKQueryError } from "@/lib/rtkQueryError";
 import { fadeUp, stagger } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -364,7 +365,10 @@ function PasswordCard() {
 type ActivityTab = "leads" | "covers";
 
 function MyActivityCard() {
-  const { data, isLoading: loading, error: queryError } = useGetMyActivityQuery();
+  const token = useAppSelector((s) => s.auth.token);
+  const { data, isLoading: loading, error: queryError } = useGetMyActivityQuery(undefined, {
+    skip: !token,
+  });
   const leads = data?.leads ?? [];
   const covers = data?.coverRequests ?? [];
   const error = errorMessage(queryError as RTKQueryError, queryError ? "Could not load your activity." : "");

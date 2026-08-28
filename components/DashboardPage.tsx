@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import Link from "./Link";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FileSpreadsheet,
@@ -31,6 +31,7 @@ import {
   useGetAdminOverviewQuery,
 } from "@/lib/store/api";
 import { exportToCsv, exportToPdf, type ExportColumn } from "@/lib/export";
+import { useAppSelector } from "@/lib/store/hooks";
 import { cn } from "@/lib/utils";
 import type { RTKQueryError } from "@/lib/rtkQueryError";
 import { errorMessage } from "@/lib/rtkQueryError";
@@ -105,7 +106,10 @@ export function DashboardPage() {
 
 function DashboardShell() {
   const [tab, setTab] = useState<TabKey>("leads");
-  const { data: overview, error: overviewError } = useGetAdminOverviewQuery();
+  const token = useAppSelector((s) => s.auth.token);
+  const { data: overview, error: overviewError } = useGetAdminOverviewQuery(undefined, {
+    skip: !token,
+  });
 
   return (
     <section className="relative min-h-[80vh] overflow-hidden bg-[#f3f6f9] py-12">
@@ -338,7 +342,8 @@ function Td({
 }
 
 function LeadsTab() {
-  const { data, isLoading, error } = useGetAdminLeadsQuery();
+  const token = useAppSelector((s) => s.auth.token);
+  const { data, isLoading, error } = useGetAdminLeadsQuery(undefined, { skip: !token });
   const items = data?.items ?? [];
 
   const columns: ExportColumn<(typeof items)[number]>[] = [
@@ -441,7 +446,8 @@ function LeadsTab() {
 }
 
 function CoversTab() {
-  const { data, isLoading, error } = useGetAdminCoverRequestsQuery();
+  const token = useAppSelector((s) => s.auth.token);
+  const { data, isLoading, error } = useGetAdminCoverRequestsQuery(undefined, { skip: !token });
   const items = data?.items ?? [];
 
   const columns: ExportColumn<(typeof items)[number]>[] = [
@@ -540,7 +546,8 @@ function CoversTab() {
 }
 
 function ConciergeTab() {
-  const { data, isLoading, error } = useGetAdminConciergeQuery();
+  const token = useAppSelector((s) => s.auth.token);
+  const { data, isLoading, error } = useGetAdminConciergeQuery(undefined, { skip: !token });
   const items = data?.items ?? [];
 
   const columns: ExportColumn<(typeof items)[number]>[] = [
@@ -613,7 +620,8 @@ function ConciergeTab() {
 }
 
 function BlueprintTab() {
-  const { data, isLoading, error } = useGetAdminBlueprintQuery();
+  const token = useAppSelector((s) => s.auth.token);
+  const { data, isLoading, error } = useGetAdminBlueprintQuery(undefined, { skip: !token });
   const items = data?.items ?? [];
 
   const columns: ExportColumn<(typeof items)[number]>[] = [
@@ -690,7 +698,8 @@ function BlueprintTab() {
 }
 
 function ChatsTab() {
-  const { data, isLoading, error } = useGetAdminChatsQuery();
+  const token = useAppSelector((s) => s.auth.token);
+  const { data, isLoading, error } = useGetAdminChatsQuery(undefined, { skip: !token });
   const items = data?.items ?? [];
   const [activeId, setActiveId] = useState<string | null>(null);
 

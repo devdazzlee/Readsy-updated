@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "./Link";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { NAV_LINKS, SERVICES } from "@/lib/content";
 import { SOCIAL_LINKS } from "@/lib/seo";

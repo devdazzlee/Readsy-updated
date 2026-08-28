@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
+import Link from "./Link";
 import type { ReactNode } from "react";
 import { fadeUp, stagger } from "@/lib/motion";
 
