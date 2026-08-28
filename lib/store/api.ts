@@ -62,6 +62,10 @@ export const api = createApi({
       query: (body) => ({ url: "/api/auth/signup", method: "POST", body }),
       invalidatesTags: ["Me", "MyActivity"],
     }),
+    googleLogin: builder.mutation<{ user: AuthUser; token: string }, { credential: string }>({
+      query: (body) => ({ url: "/api/auth/google", method: "POST", body }),
+      invalidatesTags: ["Me", "MyActivity"],
+    }),
     updateProfile: builder.mutation<{ user: AuthUser }, { name: string; phone?: string }>({
       query: (body) => ({ url: "/api/auth/profile", method: "PATCH", body }),
       invalidatesTags: ["Me"],
@@ -119,6 +123,7 @@ export const {
   useGetMeQuery,
   useLoginMutation,
   useSignupMutation,
+  useGoogleLoginMutation,
   useUpdateProfileMutation,
   useUpdatePasswordMutation,
   useGetMyActivityQuery,

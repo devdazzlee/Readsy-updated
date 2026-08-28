@@ -9,7 +9,13 @@ import {
   type ReactNode,
 } from "react";
 import { getStoredToken, type AuthUser } from "@/lib/api";
-import { api, useGetMeQuery, useLoginMutation, useSignupMutation } from "@/lib/store/api";
+import {
+  api,
+  useGetMeQuery,
+  useGoogleLoginMutation,
+  useLoginMutation,
+  useSignupMutation,
+} from "@/lib/store/api";
 import { clearToken, setToken } from "@/lib/store/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 
@@ -23,6 +29,7 @@ type AuthContextValue = {
     phone?: string;
     password: string;
   }) => Promise<void>;
+  loginWithGoogle: (credential: string) => Promise<void>;
   logout: () => void;
   setUser: (user: AuthUser) => void;
 };
@@ -60,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const [loginMutation] = useLoginMutation();
   const [signupMutation] = useSignupMutation();
+  const [googleLoginMutation] = useGoogleLoginMutation();
 
   async function login(input: { email: string; password: string }) {
     try {
@@ -84,6 +92,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function loginWithGoogle(credential: string) {
+    try {
+      const result = await googleLoginMutation({ credential }).unwrap();
+      dispatch(setToken(result.token));
+    } catch (err) {
+      throw readableError(err, "Could not sign you in with Google.");
+    }
+  }
+
   function logout() {
     dispatch(clearToken());
     dispatch(api.util.resetApiState());
@@ -104,7 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loading = !storageChecked || (!!token && (isLoading || isFetching) && !data);
 
   const value = useMemo<AuthContextValue>(
-    () => ({ user, loading, login, signup, logout, setUser }),
+    () => ({ user, loading, login, signup, loginWithGoogle, logout, setUser }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [user, loading, token],
   );

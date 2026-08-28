@@ -12,7 +12,13 @@ model User {
   name          String
   email         String         @unique
   phone         String?
-  passwordHash  String
+  // Null for accounts created via "Sign in with Google" that have never
+  // also set a password — those users can only log in through Google.
+  passwordHash  String?
+  // Google's stable per-account subject id, set once a user signs in with
+  // Google (whether that created the account or linked an existing one by
+  // matching email). Lets us recognize returning Google users directly.
+  googleId      String?        @unique
   isAdmin       Boolean        @default(false)
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt

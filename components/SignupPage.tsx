@@ -8,6 +8,7 @@ import { ArrowRight, Lock, Mail, Phone, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 import { useAuth } from "./AuthProvider";
 import { fadeUp, stagger } from "@/lib/motion";
 
@@ -69,7 +70,21 @@ export function SignupPage() {
             Unlock the AI Cover Generator and save your requests.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-4">
+          <div className="mt-7">
+            <GoogleSignInButton
+              text="signup_with"
+              onSuccess={() => router.push(next)}
+              onError={(message) => setError(message)}
+            />
+          </div>
+
+          <div className="mt-6 flex items-center gap-3 text-xs text-text-muted">
+            <span className="h-px flex-1 bg-muted-border" />
+            or sign up with email
+            <span className="h-px flex-1 bg-muted-border" />
+          </div>
+
+          <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="signup-name">Full name</Label>
               <div className="relative">

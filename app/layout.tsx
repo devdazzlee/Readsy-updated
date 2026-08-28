@@ -1,5 +1,7 @@
+import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import { AuthProvider } from "@/components/AuthProvider";
 import { ChatProvider } from "@/components/ChatProvider";
 import { QuoteProvider } from "@/components/QuoteProvider";
@@ -59,6 +61,12 @@ export const metadata: Metadata = {
   other: {
     publisher: SITE_NAME,
   },
+  verification: {
+    google: "igNR-psOO1O8BJ7t3LkaEsc1BDD1q033lPYwBA6WTBM",
+    other: {
+      "msvalidate.01": "34E71DA20CA0DCA234777F3E34ED399A",
+    },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -67,8 +75,23 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${jakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
+      <GoogleTagManager gtmId="GTM-P462ZP4X" />
       <body className="min-h-full flex flex-col bg-surface text-navy font-sans">
+        {/* Google Tag Manager (noscript) — the GoogleTagManager component
+            above only injects the <head> script; GTM's own instructions
+            also require this fallback immediately after <body> for visitors
+            with JavaScript disabled. */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-P462ZP4X"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+            title="Google Tag Manager"
+          />
+        </noscript>
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
+        <Script src="https://accounts.google.com/gsi/client" strategy="afterInteractive" />
         <ReduxProvider>
           <AuthProvider>
             <QuoteProvider>

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "./AuthProvider";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 import { cn } from "@/lib/utils";
 
 type Mode = "login" | "signup";
@@ -149,7 +150,21 @@ export function AuthModal({
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3.5">
+              <div className="mt-5">
+                <GoogleSignInButton
+                  text={mode === "signup" ? "signup_with" : "signin_with"}
+                  onSuccess={onAuthenticated}
+                  onError={(message) => setError(message)}
+                />
+              </div>
+
+              <div className="mt-4 flex items-center gap-3 text-xs text-text-muted">
+                <span className="h-px flex-1 bg-muted-border" />
+                or continue with email
+                <span className="h-px flex-1 bg-muted-border" />
+              </div>
+
+              <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3.5">
                 {mode === "signup" ? (
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="auth-modal-name">Full name</Label>

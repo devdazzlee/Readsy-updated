@@ -1,0 +1,34 @@
+# Serves this Next.js static export (output: "export") correctly on Apache
+# hosting like Hostinger.
+#
+# Next generates clean-URL pages as sibling .html files (e.g. /contact ->
+# contact.html) instead of /contact/index.html — AND it also creates a
+# same-named /contact/ folder holding small prefetch/navigation data files
+# (no index.html inside). Order matters a lot here: the .html-file checks
+# below must run BEFORE the plain "-d directory exists" check, otherwise a
+# request for /contact/ (trailing slash) matches that empty-looking folder
+# first and Apache 403s trying to list it instead of serving contact.html.
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# 1) Real files (assets, the prefetch data files themselves, etc.) — serve as-is.
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# 2) /some-page/  ->  some-page.html   (checked before any directory exists check)
+RewriteCond %{REQUEST_URI} ^/(.*)/$
+RewriteCond %{DOCUMENT_ROOT}/%1.html -f
+RewriteRule ^ /%1.html [L]
+
+# 3) /some-page  ->  some-page.html
+RewriteCond %{REQUEST_FILENAME}\.html -f
+RewriteRule ^(.*)$ $1.html [L]
+
+# 4) Anything left that's a real directory with no matching .html (e.g.
+#    _next/static/... asset folders) — let Apache serve it normally.
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Custom 404 page (Next's exported not-found page).
+ErrorDocument 404 /404.html
