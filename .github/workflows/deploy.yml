@@ -43,7 +43,7 @@ jobs:
       - name: Deploy frontend
         run: |
           rsync -az --delete \
-            -e "ssh -o IdentitiesOnly=yes" \
+            -e "ssh -o StrictHostKeyChecking=yes" \
             out/ "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/readsy/frontend/"
 
       - name: Deploy backend
@@ -52,14 +52,14 @@ jobs:
             --exclude node_modules \
             --exclude .env \
             --exclude .git \
-            -e "ssh -o IdentitiesOnly=yes" \
+            -e "ssh -o StrictHostKeyChecking=yes" \
             server/ "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/readsy/server/"
-          ssh -o IdentitiesOnly=yes \
+          ssh -o StrictHostKeyChecking=yes \
             "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
             'cd /var/www/readsy/server && npm install --omit=dev && npx prisma generate && systemctl restart readsy-api && sleep 1 && systemctl is-active readsy-api'
 
       - name: Fix frontend ownership
         run: |
-          ssh -o IdentitiesOnly=yes \
+          ssh -o StrictHostKeyChecking=yes \
             "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
             'chown -R www-data:www-data /var/www/readsy/frontend'
