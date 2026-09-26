@@ -24,17 +24,13 @@ jobs:
             server/package-lock.json
 
       - name: Install frontend deps
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       - name: Build frontend
         env:
           NEXT_PUBLIC_API_URL: https://thereadsypublishers.com
           NEXT_PUBLIC_GOOGLE_CLIENT_ID: 767174828688-rpb0oug2spr36kpnt8lccgl99gn16554.apps.googleusercontent.com
         run: npx next build
-
-      - name: Install backend deps (CI)
-        working-directory: server
-        run: npm ci
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.0
